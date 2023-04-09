@@ -23,7 +23,7 @@ def test_performance():
 
         # Use the OCR Service to extract text from the uploaded file and record the time of the process
         start_time = time.time()
-        response = requests.post('https://seappserver2.rit.edu/api/ProcessFile?ocrlib=std', files={'file': open('Application_L_Page_001.png', 'rb')})
+        response = requests.post('https://seappserver2.rit.edu/api/ProcessFile?ocrLib=std', files={'file': open('Application_L_Page_001.png', 'rb')})
         if response.status_code == 200:
             with open('Application_L_Page_001.txt', 'wb') as f:
                 f.write(response.content)
