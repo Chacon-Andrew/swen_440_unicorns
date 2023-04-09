@@ -11,8 +11,32 @@ PORT = 8000
 Handler = http.server.SimpleHTTPRequestHandler
 
 def test_performance():
-    response_API = requests.post('https://seappserver2.rit.edu/api/ProcessFile?ocrlib={std}')
-    print(response_API.status_code)
+
+    with FTP("seappserver2.rit.edu") as ftp:
+        # Upload a file to the Document Repository and record the time of the process
+        start_time = time.time()
+        ftp.login("ftp_w006", "ftp_w006_password")
+        with open('Application_L_Page_001.png', 'rb') as f:
+            ftp.storbinary('STOR Application_L_Page_001.png', f)
+        upload_time = time.time() - start_time
+        print(f'File upload time: {upload_time:.2f}s')
+
+        # Use the OCR Service to extract text from the uploaded file and record the time of the process
+        start_time = time.time()
+        response = requests.post('https://seappserver2.rit.edu/api/ProcessFile?ocrlib=std', files={'file': open('Application_L_Page_001.png', 'rb')})
+        if response.status_code == 200:
+            with open('Application_L_Page_001.txt', 'wb') as f:
+                f.write(response.content)
+        ocr_time = time.time() - start_time
+        print(f'OCR time: {ocr_time:.2f}s')
+
+        # Use the Parser Service to extract keywords from the text file and record the time of the process
+        start_time = time.time()
+        response = requests.post('https://seappserver2.rit.edu/api/ExtractKeywords', files={'file': open('Application_L_Page_001.txt', 'rb')})
+        if response.status_code == 200:
+            print(response.json()) #This can be commented out if need be
+        parser_time = time.time() - start_time
+        print(f'Parser time: {parser_time:.2f}s')
 
 def test_interoperability():
     with FTP("seappserver2.rit.edu") as ftp:
@@ -39,10 +63,11 @@ def test_utilization():
         httpd.serve_forever()
 
 def main():
-    start = time.time()
+    #start = time.time()
+    test_performance()
     test_interoperability()
-    end = time.time()
-    print(end - start)
+    #end = time.time()
+
 
 if __name__=="__main__":
     main()
