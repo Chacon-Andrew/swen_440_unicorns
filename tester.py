@@ -13,6 +13,7 @@ Handler = http.server.SimpleHTTPRequestHandler
 def test_performance():
 
     with FTP("seappserver2.rit.edu") as ftp:
+        conn = socket.create_connection(("seappserver2.rit.edu", 80))
         # Upload a file to the Document Repository and record the time of the process
         start_time = time.time()
         ftp.login("ftp_w006", "ftp_w006_password")
@@ -23,7 +24,7 @@ def test_performance():
 
         # Use the OCR Service to extract text from the uploaded file and record the time of the process
         start_time = time.time()
-        response = requests.post('https://seappserver2.rit.edu/api/ProcessFile?ocrLib=std', files={'file': open('Application_L_Page_001.png', 'rb')})
+        response = requests.post('http://seappserver2.rit.edu/OCRService/api/ProcessFile?ocrLib=std', files={'file': open('Application_L_Page_001.png', 'rb')})
         if response.status_code == 200:
             with open('Application_L_Page_001.txt', 'wb') as f:
                 f.write(response.content)
@@ -32,9 +33,9 @@ def test_performance():
 
         # Use the Parser Service to extract keywords from the text file and record the time of the process
         start_time = time.time()
-        response = requests.post('https://seappserver2.rit.edu/api/ExtractKeywords', files={'file': open('Application_L_Page_001.txt', 'rb')})
-        if response.status_code == 200:
-            print(response.json()) #This can be commented out if need be
+        response = requests.post('http://seappserver2.rit.edu/parserservice/api/ReadForm', files={'file': open('Application_L_Page_001.txt', 'rb')})
+        #if response.status_code == 200:
+            #print(response.json()) #This can be commented out if need be
         parser_time = time.time() - start_time
         print(f'Parser time: {parser_time:.2f}s')
 
@@ -65,7 +66,7 @@ def test_utilization():
 def main():
     #start = time.time()
     test_performance()
-    test_interoperability()
+    #test_interoperability()
     #end = time.time()
 
 
