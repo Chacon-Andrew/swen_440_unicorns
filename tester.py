@@ -16,14 +16,14 @@ def test_performance():
         # Upload a file to the Document Repository and record the time of the process
         start_time = time.time()
         ftp.login("ftp_w006", "ftp_w006_password")
-        with open('Application_L_Page_001.png', 'rb') as f:
+        with open('swen_440_unicorns/Application_L_Page_001.png', 'rb') as f:
             ftp.storbinary('STOR Application_L_Page_001.png', f)
         upload_time = time.time() - start_time
         print(f'File upload time: {upload_time:.2f}s')
 
         # Use the OCR Service to extract text from the uploaded file and record the time of the process
         start_time = time.time()
-        response = requests.post('https://seappserver2.rit.edu/api/ProcessFile?ocrLib=std', files={'file': open('Application_L_Page_001.png', 'rb')})
+        response = requests.post('https://seappserver2.rit.edu/api/ProcessFile?ocrLib=std', files={'file': open('swen_440_unicorns/Application_L_Page_001.png', 'rb')})
         if response.status_code == 200:
             with open('Application_L_Page_001.txt', 'wb') as f:
                 f.write(response.content)
@@ -32,7 +32,7 @@ def test_performance():
 
         # Use the Parser Service to extract keywords from the text file and record the time of the process
         start_time = time.time()
-        response = requests.post('https://seappserver2.rit.edu/api/ExtractKeywords', files={'file': open('Application_L_Page_001.txt', 'rb')})
+        response = requests.post('https://seappserver2.rit.edu/api/ExtractKeywords', files={'file': open('swen_440_unicorns/Application_L_Page_001.png', 'rb')})
         if response.status_code == 200:
             print(response.json()) #This can be commented out if need be
         parser_time = time.time() - start_time
@@ -65,7 +65,7 @@ def test_utilization():
 def main():
     #start = time.time()
     test_performance()
-    test_interoperability()
+    #test_interoperability()
     #end = time.time()
 
 
