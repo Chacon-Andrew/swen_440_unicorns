@@ -9,7 +9,8 @@ import mimetypes
 from ftplib import FTP
 from email.mime.image import MIMEImage
 
-# TODO: To quickly remove all the comment (#), use the key combination Ctrl + / or Command + / for Mac
+# TODO: To quickly remove all the comment (#), highlight all the commented code and use
+#  the key combination Ctrl + / or Command + / for Mac
 # PORT = 8000
 #
 # Handler = http.server.SimpleHTTPRequestHandler
