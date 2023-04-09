@@ -17,7 +17,7 @@ def test_performance():
         # Upload a file to the Document Repository and record the time of the process
         start_time = time.time()
         ftp.login("ftp_w006", "ftp_w006_password")
-        with open('swen_440_unicorns/Application_L_Page_001.png', 'rb') as f:
+        with open('Application_L_Page_001.png', 'rb') as f:
             ftp.storbinary('STOR Application_L_Page_001.png', f)
         upload_time = time.time() - start_time
         print(f'File upload time: {upload_time:.2f}s')
